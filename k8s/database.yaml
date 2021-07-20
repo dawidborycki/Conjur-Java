@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: usersapp
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: usersapp-db
+  namespace: usersapp
+spec:
+  selector:
+    app: usersapp-db
+  ports:
+    - port: 5432
+      targetPort: 5432
+      
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usersapp-db
+  labels:
+    app: usersapp-db
+  namespace: usersapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usersapp-db
+  template:
+    metadata:
+      labels:
+        app: usersapp-db
+    spec:
+      containers:
+      - name: usersapp-db
+        image: postgres:9.6
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 5432
+        env:
+          - name: POSTGRES_PASSWORD
+            value: Password4321
+          - name: POSTGRES_DB
+            value: users_app
+          - name: POSTGRES_USER
+            value: users_app
+

@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: usersapp-svc
+  namespace: usersapp
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: usersapp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: usersapp
+  name: usersapp
+  namespace: usersapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usersapp
+  template:
+    metadata:
+      labels:
+        app: usersapp
+spec:
+  containers:
+  - image: users:v1
+    imagePullPolicy: IfNotPresent
+    name: usersapp
+    ports:
+    - containerPort: 8080
+    env:
+      - name: DB_URL
+        value: jdbc:postgresql://usersapp-db.usersapp.svc.cluster.local:5432/postgres
+      - name: DB_USERNAME
+        value: users_app
+      - name: DB_PASSWORD
+        value: Password4321
+      - name: DB_PLATFORM
+        value: postgres       
