@@ -13,7 +13,7 @@ services:
     environment:
       - DB_USERNAME=test_app
       - DB_PASSWORD=Password4321
-      - DB_URL=jdbc:postgresql://db-postgres:5432/postgres
+      - DB_URL=postgresql://db-postgres:5432/postgres
      
   db-postgres:
     image: postgres:9.6
